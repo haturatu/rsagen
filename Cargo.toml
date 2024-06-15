@@ -1,0 +1,9 @@
+[package]
+name = "rsagen"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+rsa = { version = "0.5.0", features = ["pem"] }
+rand = "0.8.4"
+hex = "0.4.3"
