@@ -1,6 +1,6 @@
-use rand::rngs::OsRng;
-use rsa::{RsaPrivateKey, RsaPublicKey, PublicKeyParts};
-use rsa::pkcs1::{ToRsaPrivateKey, ToRsaPublicKey};
+use rsa::rand_core::OsRng;
+use rsa::{RsaPrivateKey, RsaPublicKey};
+use rsa::pkcs1::{EncodeRsaPrivateKey, EncodeRsaPublicKey, LineEnding};
 use std::env;
 use std::fs::File;
 use std::io::Write;
@@ -35,7 +35,7 @@ fn main() {
         println!("Attempt {}: Key pair generated", attempt_count);
 
         // 公開鍵をPEM形式に変換
-        let public_pem = match public_key.to_pkcs1_pem() {
+        let public_pem = match public_key.to_pkcs1_pem(LineEnding::LF) {
             Ok(pem) => pem,
             Err(e) => {
                 eprintln!("Failed to convert public key to PEM: {:?}", e);
@@ -63,8 +63,8 @@ fn main() {
 }
 
 fn save_key_pair(private_key: &RsaPrivateKey, public_key: &RsaPublicKey) {
-    let private_pem = private_key.to_pkcs1_pem().expect("failed to convert private key to PEM");
-    let public_pem = public_key.to_pkcs1_pem().expect("failed to convert public key to PEM");
+    let private_pem = private_key.to_pkcs1_pem(LineEnding::LF).expect("failed to convert private key to PEM");
+    let public_pem = public_key.to_pkcs1_pem(LineEnding::LF).expect("failed to convert public key to PEM");
 
     let mut private_file = File::create("private_key.pem").expect("failed to create private key file");
     private_file.write_all(private_pem.as_bytes()).expect("failed to write private key");
